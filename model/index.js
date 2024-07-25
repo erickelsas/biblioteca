@@ -6,8 +6,6 @@ const AuthorModel = require('./author.js');
 const BookModel = require('./book.js');
 const LoanModel = require('./loan.js');
 
-console.log(config)
-
 const sequelize = new Sequelize(config.database, config.username, config.password, {
   host: config.host,
   dialect: 'postgres', // Alterado para PostgreSQL

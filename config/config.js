@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: './docker/.env'});
 
 module.exports = {
   database: process.env.DB_NAME,
