@@ -8,7 +8,7 @@ const swaggerFile = require('./swagger-output.json');
 
 const bodyParser = require('body-parser');
 
-const { authorRoutes, authRoutes, userRoutes } = require('./routes');
+const { authorRoutes, authRoutes, userRoutes, bookRoutes } = require('./routes');
 
 const app = express();
 
@@ -16,7 +16,8 @@ app.use(bodyParser.json());
 
 app.use(authRoutes);
 app.use(userRoutes);
-app.use(authorRoutes)
+app.use(authorRoutes);
+app.use(bookRoutes)
 
 sequelize.sync({ force: false })
   .then(() => {

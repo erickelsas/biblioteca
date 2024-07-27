@@ -21,6 +21,19 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        default: true
+      },
+      quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        default: 1,
+        validate: {
+          isInt: true,
+          min: 0,
+        }
+      },
       authorId: {
         type: DataTypes.INTEGER,
         references: {
