@@ -18,10 +18,10 @@ const Author = AuthorModel(sequelize, Sequelize.DataTypes);
 const Book = BookModel(sequelize, Sequelize.DataTypes);
 const Loan = LoanModel(sequelize, Sequelize.DataTypes);
 
-Author.hasMany(Book, { foreignKey: 'authorId' });
+Author.hasMany(Book, { foreignKey: 'authorId', onDelete: 'cascade' });
 Book.belongsTo(Author, { foreignKey: 'authorId' });
-User.hasMany(Loan, { foreignKey: 'userId' });
-Book.hasMany(Loan, { foreignKey: 'bookId' });
+User.hasMany(Loan, { foreignKey: 'userId', onDelete: 'cascade' });
+Book.hasMany(Loan, { foreignKey: 'bookId', onDelete: 'cascade' });
 Loan.belongsTo(User, { foreignKey: 'userId' });
 Loan.belongsTo(Book, { foreignKey: 'bookId' });
 
