@@ -71,7 +71,6 @@ exports.createAuthor = async (req, res) => {
 
         return res.status(201).json({ author: authorWithId });
     } catch (error) {
-        // Handle any unexpected errors
         return res.status(500).json({ message: 'Erro ao criar usuário.', error: error.message });
     }
 
