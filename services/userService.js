@@ -58,7 +58,7 @@ exports.deleteUser = async (id) => {
 
         return length
     } catch(err){
-        throw new Error('Erro ao deletar usuário: ' + error.message);
+        throw new Error('Erro ao deletar usuário: ' + err.message);
     }
 }
 
@@ -78,6 +78,6 @@ exports.updateUser = async (id, user) => {
 
       return updatedUser;
   } catch (err) {
-      throw new Error('Erro ao atualizar usuário ' + error.message);
+      throw new Error('Erro ao atualizar usuário ' + err.message);
   }
 };
