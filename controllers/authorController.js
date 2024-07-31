@@ -27,6 +27,31 @@ exports.getAuthors = async (req, res) => {
     /* 
     #swagger.tags = ['Authors']
     #swagger.summary = 'Recebe todos os autores cadastrados'
+        #swagger.parameters['limit'] = {
+        in: 'query',
+        description: 'Número de itens por página',
+        required: false,
+        type: 'integer'
+    }
+    #swagger.parameters['page'] = {
+        in: 'query',
+        description: 'Número da página',
+        required: false,
+        type: 'integer'
+    }
+    #swagger.responses[200] = {
+        description: 'Envia todos os usuários encontrados',
+        schema: [{ $ref: '#/components/schemas/Author' }]
+    }
+    #swagger.responses[400] = {
+        $ref: '#/components/responses/BadRequest'
+    }
+    #swagger.responses[404] = {
+        $ref: '#/components/responses/NotFound'
+    }
+    #swagger.responses[500] = {
+        $ref: '#/components/responses/InternalServerError'
+    }
     */
 };
 
@@ -34,7 +59,7 @@ exports.getAuthorById = async (req, res) => {
     try{
         const id = req.params.id;
 
-        if(id === null){
+        if(id === null || id < 1){
             return res.status(400).json({ message: 'Id digitado inválido.' });
         }
 
@@ -52,6 +77,31 @@ exports.getAuthorById = async (req, res) => {
     /* 
     #swagger.tags = ['Authors']
     #swagger.summary = 'Recebe um autor cadastrado, através do id'
+        #swagger.parameters['id'] = {
+        in: 'path',
+        description: 'ID do autor',
+        required: true,
+        type: 'integer'
+    }
+    #swagger.responses[200] = {
+        description: 'Envia o autor encontrado',
+        schema: { $ref: '#/components/schemas/Author' }
+    }
+    #swagger.responses[400] = {
+        $ref: '#/components/responses/BadRequest'
+    }
+    #swagger.responses[401] = {
+        $ref: '#/components/responses/Unauthorized'
+    }
+    #swagger.responses[403] = {
+        $ref: '#/components/responses/Forbidden'
+    }
+    #swagger.responses[404] = {
+        $ref: '#/components/responses/NotFound'
+    }
+    #swagger.responses[500] = {
+        $ref: '#/components/responses/InternalServerError'
+    }
     */
 }
 
@@ -77,6 +127,22 @@ exports.createAuthor = async (req, res) => {
     /* 
     #swagger.tags = ['Authors']
     #swagger.summary = 'Cria um novo autor'
+        #swagger.parameters['book'] = {
+        in: 'body',
+        description: 'Informações do autor',
+        required: true,
+        schema: {$ref: '#/components/schemas/Author'}
+    }
+    #swagger.responses[201] = {
+        description: 'Cria um autor',
+        schema: { $ref: '#/components/schemas/Author' }
+    }
+    #swagger.responses[400] = {
+        $ref: '#/components/responses/BadRequest'
+    }
+    responses[500] = {
+        $ref: '#/components/responses/InternalServerError'
+    }
     */
 };
 
@@ -104,6 +170,22 @@ exports.deleteAuthor = async (req, res) => {
     /* 
     #swagger.tags = ['Authors']
     #swagger.summary = 'Deleta um autor'
+    #swagger.parameters['id'] = {
+        in: 'path',
+        description: 'ID do autor',
+        required: true,
+        type: 'integer'
+    }
+    #swagger.responses[200] = {
+        description: 'Autor deletado com sucesso',
+        schema: { "message":"autor deletado com sucesso." }
+    }
+    #swagger.responses[400] = {
+        $ref: '#/components/responses/BadRequest'
+    }
+    #swagger.responses[500] = {
+        $ref: '#/components/responses/InternalServerError'
+    }
     */
 }
 exports.updateAuthor = async (req, res) => {
@@ -125,5 +207,27 @@ exports.updateAuthor = async (req, res) => {
     /* 
     #swagger.tags = ['Authors']
     #swagger.summary = 'Atualiza um autor'
+    #swagger.parameters['id'] = {
+        in: 'path',
+        description: 'ID do autor',
+        required: true,
+        type: 'integer'
+    }
+    #swagger.parameters['book'] = {
+        in: 'body',
+        description: 'Informações atualizadas do autor',
+        required: true,
+        schema: {$ref: '#/components/schemas/Author'}
+    }
+    #swagger.responses[200] = {
+        description: 'Autor atualizado com sucesso',
+        schema: { $ref: '#/components/schemas/Author' }
+    }
+    #swagger.responses[404] = {
+        $ref: '#/components/responses/NotFound'
+    }
+    #swagger.responses[500] = {
+        $ref: '#/components/responses/InternalServerError'
+    }
     */
 };

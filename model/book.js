@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      default: 1,
+      default: 0,
       validate: {
         isInt: true,
         min: 0,

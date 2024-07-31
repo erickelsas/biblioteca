@@ -3,7 +3,7 @@ const { Loan ,Book, Author } = require('../model');
 const { getBookById } = require('../services/bookService')
 
 
-exports.getLoans = async (limit = 10, page = 1, returned = false) => {
+exports.getLoans = async (limit = 10, page = 1, returned = true) => {
   try {
     const validLimits = [5, 10, 30];
     
@@ -36,10 +36,11 @@ exports.getLoans = async (limit = 10, page = 1, returned = false) => {
         ],
         limit,
         offset,
-        where: {
-            returned
-        }
     });
+
+    if(!returned){
+        baseQuery.where = { returned }
+    }
     
     return loans;
   } catch (error) {

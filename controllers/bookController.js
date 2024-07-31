@@ -2,7 +2,7 @@ const bookService = require('../services/bookService');
 
 exports.getBooks = async (req, res) => {
   try {
-    const {limit = 10, page = 1} = req.query;
+    const { limit = 10, page = 1 } = req.query;
 
     const validLimits = [5, 10, 30];
     if (!validLimits.includes(parseInt(limit))) {
@@ -27,12 +27,37 @@ exports.getBooks = async (req, res) => {
     /* 
     #swagger.tags = ['Books']
     #swagger.summary = 'Recebe todos os livros cadastrados'
+    #swagger.parameters['limit'] = {
+        in: 'query',
+        description: 'Número de itens por página',
+        required: false,
+        type: 'integer'
+    }
+    #swagger.parameters['page'] = {
+        in: 'query',
+        description: 'Número da página',
+        required: false,
+        type: 'integer'
+    }
+    #swagger.responses[200] = {
+        description: 'Envia todos os livros encontrados',
+        schema: [{ $ref: '#/components/schemas/Book' }]
+    }
+    #swagger.responses[400] = {
+        $ref: '#/components/responses/BadRequest'
+    }
+    #swagger.responses[404] = {
+        $ref: '#/components/responses/NotFound'
+    }
+    #swagger.responses[500] = {
+        $ref: '#/components/responses/InternalServerError'
+    }
     */
 };
 
 exports.getActiveBooks = async (req, res) => {
     try {
-      const {limit = 10, page = 1} = req.query;
+      const { limit = 10, page = 1 } = req.query;
 
       const validLimits = [5, 10, 30];
       if (!validLimits.includes(parseInt(limit))) {
@@ -54,17 +79,48 @@ exports.getActiveBooks = async (req, res) => {
       return res.status(500).json({ message: 'Erro ao buscar livros.', error: error.message });
     }
   
-      /* 
-      #swagger.tags = ['Books']
-      #swagger.summary = 'Recebe todos os livros cadastrados que estão ativos'
-      */
-  };
+    /* 
+    #swagger.tags = ['Books']
+    #swagger.summary = 'Recebe todos os livros cadastrados que estão ativos'
+    #swagger.parameters['limit'] = {
+        in: 'query',
+        description: 'Número de itens por página',
+        required: false,
+        type: 'integer'
+    }
+    #swagger.parameters['page'] = {
+        in: 'query',
+        description: 'Número da página',
+        required: false,
+        type: 'integer'
+    }
+    #swagger.responses[200] = {
+        description: 'Envia todos os livros ativos encontrados',
+        schema: { $ref: '#/components/schemas/Book' }
+    }
+    #swagger.responses[400] = {
+        $ref: '#/components/responses/BadRequest'
+    }
+    #swagger.responses[401] = {
+        $ref: '#/components/responses/Unauthorized'
+    }
+    #swagger.responses[403] = {
+        $ref: '#/components/responses/Forbidden'
+    }
+    #swagger.responses[404] = {
+        $ref: '#/components/responses/NotFound'
+    }
+    #swagger.responses[500] = {
+        $ref: '#/components/responses/InternalServerError'
+    }
+    */
+};
 
-  exports.getBookById = async (req, res) => {
-    try{
+exports.getBookById = async (req, res) => {
+    try {
         const id = req.params.id;
 
-        if(id === null){
+        if(id === null || id < 1){
             return res.status(400).json({ message: 'Id digitado inválido.' });
         }
 
@@ -75,15 +131,34 @@ exports.getActiveBooks = async (req, res) => {
         }
 
         return res.status(200).json({ book })
-    } catch (error){
+    } catch (error) {
         return res.status(500).json({ message: 'Erro ao buscar livro.', error: error.message });
     }
 
     /* 
     #swagger.tags = ['Books']
     #swagger.summary = 'Recebe um livro cadastrado através do id'
+    #swagger.parameters['id'] = {
+        in: 'path',
+        description: 'ID do livro',
+        required: true,
+        type: 'integer'
+    }
+    #swagger.responses[200] = {
+        description: 'Envia o livro encontrado',
+        schema: { $ref: '#/components/schemas/Book' }
+    }
+    #swagger.responses[400] = {
+        $ref: '#/components/responses/BadRequest'
+    }
+    #swagger.responses[404] = {
+        $ref: '#/components/responses/NotFound'
+    }
+    #swagger.responses[500] = {
+        $ref: '#/components/responses/InternalServerError'
+    }
     */
-}
+};
 
 exports.createBook = async (req, res) => {
     try {
@@ -107,54 +182,107 @@ exports.createBook = async (req, res) => {
     /* 
     #swagger.tags = ['Books']
     #swagger.summary = 'Cria um novo livro'
+    #swagger.parameters['book'] = {
+        in: 'body',
+        description: 'Informações do livro',
+        required: true,
+        schema: {$ref: '#/components/schemas/Book'}
+    }
+    #swagger.responses[201] = {
+        description: 'Livro criado com sucesso',
+        schema: { $ref: '#/components/schemas/Book' }
+    }
+    #swagger.responses[400] = {
+        $ref: '#/components/responses/BadRequest'
+    }
+    #swagger.responses[500] = {
+        $ref: '#/components/responses/InternalServerError'
+    }
     */
 };
 
+exports.updateBook = async (req, res) => {
+    const bookId = req.params.id;
+    const { title, publicationYear, category, isActive, quantity, authorId } = req.body;
+
+    try {
+        const updatedBook = await bookService.updateBook(bookId, { title, publicationYear, category, isActive, quantity, authorId });
+
+        if (!updatedBook) {
+            return res.status(404).json({ message: 'Livro não encontrado.' });
+        }
+
+        return res.status(200).json({ message: 'Livro atualizado com sucesso.', book: updatedBook });
+    } catch (error) {
+        return res.status(500).json({ message: 'Erro ao atualizar livro.', error: error.message });
+    }
+
+    /* 
+    #swagger.tags = ['Books']
+    #swagger.summary = 'Atualiza um livro'
+    #swagger.parameters['id'] = {
+        in: 'path',
+        description: 'ID do livro',
+        required: true,
+        type: 'integer'
+    }
+    #swagger.parameters['book'] = {
+        in: 'body',
+        description: 'Informações atualizadas do livro',
+        required: true,
+        schema: {$ref: '#/components/schemas/Book'}
+        }
+    }
+    #swagger.responses[200] = {
+        description: 'Livro atualizado com sucesso',
+        schema: { $ref: '#/components/schemas/Book' }
+    }
+    #swagger.responses[404] = {
+        $ref: '#/components/responses/NotFound'
+    }
+    #swagger.responses[500] = {
+        $ref: '#/components/responses/InternalServerError'
+    }
+    */
+};
 
 exports.deleteBook = async (req, res) => {
-    try{
-        const id = req.params.id
-
+    try {
+        const id = req.params.id;
 
         if(!id || id < 1){
-            return res.status(400).json({ message: 'Id inválido.'})
+            return res.status(400).json({ message: 'Id inválido.' })
         }
 
-        const sucess = await bookService.inativeBook(id);
+        const success = await bookService.inativeBook(id);
 
-        if(!sucess){
-            res.status(400).json({ message: 'Não foi possível inativar usuário.'});
+        if(!success){
+            res.status(400).json({ message: 'Não foi possível inativar livro.' });
         }
 
-        return res.status(200).json({ message: 'Livro inativado com sucesso!'})
-    } catch (err){
-        return res.status(500).json({ message: 'Erro ao inativar usuário.', error: err.message})
+        return res.status(200).json({ message: 'Livro inativado com sucesso!' })
+    } catch (err) {
+        return res.status(500).json({ message: 'Erro ao inativar livro.', error: err.message })
     }
 
     /* 
     #swagger.tags = ['Books']
     #swagger.summary = 'Torna um livro inativo'
+    #swagger.parameters['id'] = {
+        in: 'path',
+        description: 'ID do livro',
+        required: true,
+        type: 'integer'
+    }
+    #swagger.responses[200] = {
+        description: 'Livro inativado com sucesso',
+        schema: { $ref: '#/components/schemas/Book' }
+    }
+    #swagger.responses[400] = {
+        $ref: '#/components/responses/BadRequest'
+    }
+    #swagger.responses[500] = {
+        $ref: '#/components/responses/InternalServerError'
+    }
     */
-}
-
-exports.updateBook = async (req, res) => {
-  const bookId = req.params.id;
-  const { title, publicationYear, category, isActive, quantity, authorId } = req.body;
-
-  try {
-      const updatedBook = await bookService.updateBook(bookId, { title, publicationYear, category, isActive, quantity, authorId });
-
-      if (!updatedBook) {
-          return res.status(404).json({ message: 'Livro não encontrado.' });
-      }
-
-      return res.status(200).json({ message: 'Livro atualizado com sucesso.', book: updatedBook });
-  } catch (error) {
-      return res.status(500).json({ message: 'Erro ao atualizar livro.', error: error.message });
-  }
-
-  /* 
-  #swagger.tags = ['Books']
-  #swagger.summary = 'Atualiza um livro'
-  */
 };
