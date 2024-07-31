@@ -1,16 +1,4 @@
-const dueDateHook = (loan) => {
-  const hoje = new Date();
-  const devolucao = new Date(hoje);
-  devolucao.setDate(hoje.getDate() + 7);
-
-  if (!loan.dueDate || loan.dueDate === null) {
-    loan.dueDate = devolucao;
-  }
-};
-
-const bulkDueDateHook = (loans) => {
-  loans.forEach(dueDateHook);
-};
+const { dueDateHook, bulkDueDateHook} = require('../utils/hooks');
 
 module.exports = (sequelize, DataTypes) => {
   const Loan = sequelize.define('Loan', {

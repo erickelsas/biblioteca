@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const {beforeBulkCreateUser, beforeCreateUser} = require('../utils/hooks')
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
@@ -26,20 +26,8 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     hooks: {
-      beforeCreate: async (user) => {
-        if (user.password) {
-          const salt = await bcrypt.genSalt(10);
-          user.password = await bcrypt.hash(user.password, salt);
-        }
-      },
-      beforeBulkCreate: async (users) => {
-        await Promise.all(users.map(async (user) => {
-          if (user.password) {
-            const salt = await bcrypt.genSalt(10);
-            user.password = await bcrypt.hash(user.password, salt);
-          }
-        }));
-      },
+      beforeCreate: (user) => beforeCreateUser(user),
+      beforeBulkCreate: (users) => beforeBulkCreateUser(users)
     },
   });
 

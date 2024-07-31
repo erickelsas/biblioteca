@@ -87,12 +87,12 @@ exports.createLoan = async ({ userId, bookId, diasEmprestados = 7 }) => {
     try {
         const book = await getBookById(bookId);
 
-        const countAvaiableBooks = await Loan.count({ where: {
+        const livrosEmprestados = await Loan.count({ where: {
             bookId,
             returned: false
         }})
 
-        if(book.quantity <= countAvaiableBooks){
+        if(book.quantity <= livrosEmprestados){
             throw new Error(`Todos os livros ${book.title} já estão emprestados.`)
         }
 
