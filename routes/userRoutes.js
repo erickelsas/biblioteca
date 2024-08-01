@@ -8,7 +8,7 @@ router.get('/users/', authenticateToken, userController.getUsers);
 
 router.get('/users/:id', authenticateToken, userController.getUserById);
 
-router.post('/users', admin, userController.createUser);
+router.post('/users/', admin, userController.createUser);
 
 router.delete('/users/:id', admin, userController.deleteUser);
 

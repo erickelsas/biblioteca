@@ -18,6 +18,15 @@ exports.login = async (req, res) => {
     /* 
     #swagger.tags = ['Login e registro']
     #swagger.summary = 'Realiza o login e retorna um token'
+    #swagger.responses[200] = {
+        schema: {'token':'string'}
+    }
+    #swagger.responses[401] = {
+        $ref: '#/components/responses/Unauthorized'
+    }
+    #swagger.responses[500] = {
+        $ref: '#/components/responses/InternalServerError'
+    }
     */
 }
 
@@ -50,5 +59,18 @@ exports.register = async (req, res) => {
     /* 
     #swagger.tags = ['Login e registro']
     #swagger.summary = 'Realiza o registro de um novo usuário e retorna o usuário e um token'
+    #swagger.responses[201] = {
+        description: 'Criado com sucesso!',
+        schema: { $ref: '#/components/schemas/User'}
+    }
+    #swagger.responses[400] = {
+        $ref: '#/components/responses/BadRequest'
+    }
+    #swagger.responses[401] = {
+        $ref: '#/components/responses/Unauthorized'
+    }
+    #swagger.responses[500] = {
+        $ref: '#/components/responses/InternalServerError'
+    }
     */
 }

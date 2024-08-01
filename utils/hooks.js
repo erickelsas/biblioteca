@@ -1,18 +1,29 @@
 const bcrypt = require('bcrypt');
 
 exports.dueDateHook = (loan) => {
-    const hoje = new Date();
-    const devolucao = new Date(hoje);
-    devolucao.setDate(hoje.getDate() + 7);
-  
+    const loanDate = loan.loanDate
+    const devolucao = new Date();
+    devolucao.setDate(loanDate.getDate() + 7);
+
     if (!loan.dueDate || loan.dueDate === null) {
       loan.dueDate = devolucao;
     }
   };
 
 exports.bulkDueDateHook = (loans) => {
-    loans.forEach(dueDateHook);
+    loans.forEach(this.dueDateHook);
 };
+
+exports.dueDateFineHook = (fine) => {
+  const fineDate = fine.startDate
+  const diaMax = new Date();
+
+  diaMax.setDate(fineDate.getDate() + 15);
+}
+
+exports.bulkDueDateFineHook = (fines) => {
+  fines.forEach(this.dueDateFineHook);
+}
 
 exports.beforeCreateUser = async (user) => {
     if (user.password) {

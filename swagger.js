@@ -13,6 +13,14 @@ const doc = {
   produces: ['application/json'],
   tags: [
     {
+      name: 'Install',
+      description: 'Rota que realiza a instalação do banco de dados e cria os primeiros registros'
+    },
+    {
+      name: 'Login e registro',
+      description: 'Rotas relativas a autentificação'
+    },
+    {
       name: 'Users',
       description: 'Rotas relativas a usuários'
     },
@@ -21,8 +29,16 @@ const doc = {
       description: 'Rotas relativas a autores'
     },
     {
-      name: 'Login e registro',
-      description: 'Rotas relativas a autentificação'
+      name: 'Books',
+      description: 'Rotas relativas a livros'
+    },
+    {
+      name: 'Loans',
+      description: 'Rotas relativas a empréstimos'
+    },
+    {
+      name: 'Fines',
+      description: 'Rotas relativas a multas'
     }
   ],
   components: {
@@ -150,7 +166,117 @@ const doc = {
           }
         },
         required: ['email', 'name', 'password']
-      }
+      },
+      "Fine": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "amount": {
+            "type": "string",
+            "format": "decimal",
+            "example": "10.00"
+          },
+          "paid": {
+            "type": "boolean",
+            "example": false
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-12-08T03:00:00.000Z"
+          },
+          "paymentMethod": {
+            "type": "string",
+            "nullable": true,
+            "example": null
+          },
+          "loan": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              },
+              "loanDate": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2024-08-01T01:10:30.952Z"
+              },
+              "returnDate": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2024-09-08T03:00:00.000Z"
+              },
+              "book": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": 2
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "Tudo é rio"
+                  },
+                  "publicationYear": {
+                    "type": "integer",
+                    "example": 2014
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "Romance"
+                  },
+                  "isActive": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "quantity": {
+                    "type": "integer",
+                    "example": 20
+                  },
+                  "author": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "example": 2
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Carla Madeira"
+                      },
+                      "biography": {
+                        "type": "string",
+                        "example": "Carla Madeira é uma escritora brasileira conhecida pelas obras Tudo é Rio, A Natureza da Mordida e Véspera. Carla Madeira também é jornalista e publicitária."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              },
+              "name": {
+                "type": "string",
+                "example": "admin"
+              },
+              "email": {
+                "type": "string",
+                "example": "admin@admin.com"
+              }
+            }
+          }
+        },
+      },
     },
     responses: {
       BadRequest: {

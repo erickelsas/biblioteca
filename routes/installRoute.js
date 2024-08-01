@@ -1,9 +1,9 @@
 const express = require('express');
-const { sequelize, Book, Loan, User, Author } = require('../model');
+const { sequelize, Book, Loan, User, Author, Fine } = require('../model');
 const router = express.Router();
 
 
-router.get('/install', (req, res) => {
+router.get('/install/', (req, res) => {
     const users = [
         {
           id: 1,
@@ -96,7 +96,9 @@ router.get('/install', (req, res) => {
       const loans = [
         {
           userId: 1,
-          bookId: 2
+          bookId: 2,
+          returned: true,
+          returnDate: new Date('09/08/2024')
         },
         {
           userId: 3,
@@ -116,6 +118,15 @@ router.get('/install', (req, res) => {
         }
       ];
 
+      const fines = [
+        {
+          amount: 10,
+          dueDate: new Date('12/08/2024'),
+          loanId: 1,
+          userId: 1
+        }
+      ]
+
     sequelize.sync({ force: false })
     .then(async () => {
     console.log('Banco de dados e tabelas criados!');
@@ -132,6 +143,9 @@ router.get('/install', (req, res) => {
 
         await Loan.bulkCreate(loans, {validate: true});
         console.log("Empréstimos foram adicionados!");
+
+        await Fine.bulkCreate(fines, {validate: true});
+        console.log("Multas foram adicionadas!");
         
         return res.status(201).json({ message: 'Instalado com sucesso!'})
     } catch (error){
@@ -145,7 +159,7 @@ router.get('/install', (req, res) => {
     });
 
     /*
-    #swagger.tags = ['Instalação']
+    #swagger.tags = ['Install']
     #swagger.summary = 'Instala o banco de dados e cria os primeiros registros'
    
     #swagger.responses[201] = {

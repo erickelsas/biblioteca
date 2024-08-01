@@ -1,4 +1,4 @@
-const { Loan ,Book, Author } = require('../model');
+const { Loan ,Book, Author, User } = require('../model');
 
 const { getBookById } = require('../services/bookService')
 
@@ -13,7 +13,7 @@ exports.getLoans = async (limit = 10, page = 1, returned = true) => {
     
     const offset = (page - 1) * limit;
 
-    const loans = await Loan.findAll({
+    const baseQuery = {
         attributes: ['id', 'loanDate', 'dueDate', 'returnDate', 'returned'],
         include: [
             {
@@ -36,12 +36,14 @@ exports.getLoans = async (limit = 10, page = 1, returned = true) => {
         ],
         limit,
         offset,
-    });
+    };
 
     if(!returned){
-        baseQuery.where = { returned }
+        baseQuery.where = { returned: false };
     }
-    
+
+    const loans = await Loan.findAll(baseQuery);
+
     return loans;
   } catch (error) {
     throw new Error('Erro ao buscar empréstimos: ' + error.message);
@@ -50,7 +52,7 @@ exports.getLoans = async (limit = 10, page = 1, returned = true) => {
 
 exports.getLoanById = async (id) => {
   try {
-    const loan = await Loan.findAll({
+    const loan = await Loan.findOne({
         attributes: ['id', 'loanDate', 'dueDate', 'returnDate', 'returned'],
         include: [
             {
@@ -71,8 +73,6 @@ exports.getLoanById = async (id) => {
                 attributes: ['id', 'name', 'email']
             }
         ],
-        limit,
-        offset,
         where: {
             id
         }
@@ -96,13 +96,7 @@ exports.createLoan = async ({ userId, bookId, diasEmprestados = 7 }) => {
             throw new Error(`Todos os livros ${book.title} já estão emprestados.`)
         }
 
-        const hoje = new Date();
-        const devolucao = new Date(hoje);
-        devolucao.setDate(hoje.getDate() + diasEmprestados)
-
         const loan = await Loan.create({
-            loanDate: hoje,
-            returnDate: devolucao,
             userId,
             bookId
         })
@@ -130,7 +124,13 @@ exports.deleteLoan = async (id) => {
 
 exports.returnBook = async(id) => {
   try{
-    const [rowsUpdated] = await Loan.update({ returned: true, dueDate: new Date()}, { where: { id }})
+    const loan = await this.getLoanById(id)
+
+    if(loan.returned){
+        throw new Error('Livro já foi devolvido, impossível remover novamente.')
+    }
+
+    const [rowsUpdated] = await Loan.update({ returned: true, returnDate: new Date()}, { where: { id }})
   
     return rowsUpdated !== 0;
   } catch(err){
@@ -148,9 +148,7 @@ exports.updateLoan = async (id, loan) => {
           return null;
       }
 
-      const updatedLoan = await Loan.findOne({
-          where: { id }
-      });
+      const updatedLoan = await this.getLoanById(id);
 
       return updatedLoan;
   } catch (err) {

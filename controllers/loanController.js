@@ -22,7 +22,7 @@ exports.getLoans = async (req, res) => {
 
         return res.status(200).json({ loans })
     } catch (err) {
-        return res.status(500).json({ message: 'Erro ao buscar livros.', error: err.message })
+        return res.status(500).json({ message: 'Erro ao buscar empréstimos.', error: err.message })
     }
 
     /* 
@@ -79,7 +79,7 @@ exports.getActiveLoans = async (req, res) => {
         return res.status(200).json({ loans })
 
     } catch (err) {
-        return res.status(500).json({ message: 'Erro ao buscar livros.', error: err.message })
+        return res.status(500).json({ message: 'Erro ao buscar empréstimos.', error: err.message })
     }
 
     /* 
@@ -98,7 +98,7 @@ exports.getActiveLoans = async (req, res) => {
         type: 'integer'
     }
     #swagger.responses[200] = {
-        description: 'Envia todos os livros ativos encontrados',
+        description: 'Envia todos os empréstimos encontrados',
         schema: [{ $ref: '#/components/schemas/Loan' }]
     }
     #swagger.responses[400] = {
@@ -305,6 +305,9 @@ exports.returnBook = async (req, res) => {
 
         return res.status(200).json({ message: 'Livro devolvido com sucesso.' })
     } catch (err) {
+        if(err.message.includes('Livro já foi devolvido, impossível remover novamente.')){
+            return res.status(400).json({ message: err.message })
+        }
         return res.status(500).json({ message: 'Erro ao devolver livro.', error: err.message })
     }
 
@@ -319,7 +322,7 @@ exports.returnBook = async (req, res) => {
     }
     #swagger.responses[200] = {
         description: 'Livro devolvido com sucesso',
-        schema: { $ref: '#/components/schemas/Book' }
+        schema: { "message":"Livro devolvido com sucesso" }
     }
     #swagger.responses[400] = {
         $ref: '#/components/responses/BadRequest'

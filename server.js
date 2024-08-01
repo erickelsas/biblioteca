@@ -6,18 +6,19 @@ const swaggerFile = require('./swagger-output.json');
 
 const bodyParser = require('body-parser');
 
-const { authorRoutes, authRoutes, userRoutes, bookRoutes, loanRoutes, installRoute } = require('./routes');
+const { authorRoutes, authRoutes, userRoutes, bookRoutes, loanRoutes, fineRoutes, installRoute } = require('./routes');
 
 const app = express();
 
 app.use(bodyParser.json());
 
-app.use(installRoute)
+app.use(installRoute);
 app.use(authRoutes);
 app.use(userRoutes);
 app.use(authorRoutes);
 app.use(bookRoutes);
-app.use(loanRoutes)
+app.use(loanRoutes);
+app.use(fineRoutes);
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 

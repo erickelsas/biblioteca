@@ -40,8 +40,8 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     hooks: {
-      beforeBulkCreate: (loans) => bulkDueDateHook(loans),
-      beforeCreate: (loan) => dueDateHook(loan)
+      beforeBulkCreate: (loans) => {bulkDueDateHook(loans)},
+      beforeCreate: (loan) => {dueDateHook(loan)}
     }
   });
 
