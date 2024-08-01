@@ -2,6 +2,8 @@ const { Loan ,Book, Author, User } = require('../model');
 
 const { getBookById } = require('../services/bookService')
 
+const { createFine } = require('../services/fineService')
+
 
 exports.getLoans = async (limit = 10, page = 1, returned = true) => {
   try {
@@ -123,19 +125,44 @@ exports.deleteLoan = async (id) => {
 }
 
 exports.returnBook = async(id) => {
-  try{
-    const loan = await this.getLoanById(id)
+    try {
+        let fine;
 
-    if(loan.returned){
-        throw new Error('Livro já foi devolvido, impossível remover novamente.')
-    }
+        const loan = await this.getLoanById(id);
+        
+        if(!loan){
+          throw new Error('ID incorreto.');
+        }
 
-    const [rowsUpdated] = await Loan.update({ returned: true, returnDate: new Date()}, { where: { id }})
-  
-    return rowsUpdated !== 0;
-  } catch(err){
-    throw new Error('Erro ao devolver livro: ' + err.message)
-  }
+
+        if (loan.returned) {
+          throw new Error('Livro já foi devolvido, impossível remover novamente.');
+        }
+    
+        const returnDate = new Date();
+    
+        const [rowsUpdated] = await Loan.update(
+          { returned: true, returnDate },
+          { where: { id } }
+        );
+
+        const loanDate = new Date(loan.loanDate);
+    
+        const dif = Math.abs(returnDate - loanDate);
+        const diffDays = Math.ceil(dif / (1000 * 60 * 60 * 24));
+
+        if (diffDays > 0) {
+          fine = await createFine({
+            amount: (diffDays * process.env.VALOR_MULTA),
+            loanId: loan.id,
+            userId: loan.user.id
+          });
+        }
+    
+        return { rowsUpdated, fine };
+      } catch (error) {
+        throw new Error('Erro ao devolver livro: ' + error.message);
+      }
 }
 
 exports.updateLoan = async (id, loan) => {

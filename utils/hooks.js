@@ -15,10 +15,18 @@ exports.bulkDueDateHook = (loans) => {
 };
 
 exports.dueDateFineHook = (fine) => {
+  if(!fine.startDate || fine.startDate === null){
+    fine.startDate = new Date();
+  }
+  
   const fineDate = fine.startDate
   const diaMax = new Date();
 
   diaMax.setDate(fineDate.getDate() + 15);
+
+  if(!fine.dueDate || fine.dueDate === null){
+    fine.dueDate = diaMax;
+  }
 }
 
 exports.bulkDueDateFineHook = (fines) => {

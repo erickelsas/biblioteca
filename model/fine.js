@@ -51,8 +51,10 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
     }, {
-      beforeCreate: dueDateFineHook,
-      beforeBulkCreate: bulkDueDateFineHook
+      hooks:{
+        beforeCreate: (fine) => {dueDateFineHook(fine)},
+        beforeBulkCreate: (fines) => {bulkDueDateFineHook(fines)}
+      }
     });
   
     return Fine;

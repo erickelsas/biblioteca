@@ -116,7 +116,7 @@ exports.createFine = async({ amount, paid, dueDate, payDate, paymentMethod, loan
         const newFine = await this.getFineById(fine.id);
         return newFine
     } catch (err){
-        throw new Error('Erro ao criar multa: ' + error.message)
+        throw new Error('Erro ao criar multa: ' + err.message)
     }
 }
 

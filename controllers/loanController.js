@@ -1,5 +1,7 @@
 const loanService = require('../services/loanService')
 
+const { getFines } = require('../services/fineService')
+
 exports.getLoans = async (req, res) => {
     try {
         const { limit = 10, page = 1 } = req.query;
@@ -171,6 +173,12 @@ exports.createLoan = async (req, res) => {
             return res.status(400).json({ message: 'Não existe empréstimo enviado no body.' });
         }
 
+        const existsFinesForThisUser = await getFines(30, 1, false, loan.userId);
+
+        if(existsFinesForThisUser){
+            return res.status(403).json({ message: `${existsFinesForThisUser[0].user.name} tem multas em aberto, deve pagá-las antes de realizar um novo empréstimo.`, fines: existsFinesForThisUser})
+        }
+
         const loanWithId = await loanService.createLoan(loan);
 
         if (!loanWithId) {
@@ -197,6 +205,9 @@ exports.createLoan = async (req, res) => {
     }
     #swagger.responses[400] = {
         $ref: '#/components/responses/BadRequest'
+    }
+    #swagger.responses[403] = {
+        $ref: '#/components/responses/Forbidden'
     }
     #swagger.responses[500] = {
         $ref: '#/components/responses/InternalServerError'
@@ -297,17 +308,26 @@ exports.returnBook = async (req, res) => {
             return res.status(400).json({ message: 'Id inválido.' })
         }
 
-        const success = await loanService.returnBook(id);
+        const {rowsUpdated, fine} = await loanService.returnBook(id);
 
-        if (success < 1) {
+        if (rowsUpdated < 1) {
             res.status(400).json({ message: 'Não foi possível devolver o livro.' })
         }
 
-        return res.status(200).json({ message: 'Livro devolvido com sucesso.' })
-    } catch (err) {
-        if(err.message.includes('Livro já foi devolvido, impossível remover novamente.')){
+        if(!fine){
+            return res.status(200).json({ message: 'Livro devolvido com sucesso.' })
+        }
+
+        return res.status(200).json({message: 'Livro devolvido com sucesso, mas há uma multa em aberto.', fine})
+        } catch (err) {
+        if(err.message.includes('Livro já foi devolvido, impossível devolver novamente.')){
             return res.status(400).json({ message: err.message })
         }
+
+        if(err.message.includes('ID incorreto.')){
+            return res.status(400).json({ message: err.message })
+        }
+
         return res.status(500).json({ message: 'Erro ao devolver livro.', error: err.message })
     }
 

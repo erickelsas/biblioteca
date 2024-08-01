@@ -9,7 +9,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     loanDate: {
       type: DataTypes.DATE,
-      allowNull: true,
       defaultValue: DataTypes.NOW,
     },
     dueDate: {
