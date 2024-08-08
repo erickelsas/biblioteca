@@ -4,4 +4,4 @@ swagger-output.json
 
 package-lock.json
 
-/.env
+*/.env
