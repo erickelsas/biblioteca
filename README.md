@@ -14,6 +14,8 @@ Após isso, a primeira requisição deve ser realizada para `GET localhost:PORT/
 
 Agora o sistema já está utilizável e você pode ver as rotas disponíveis acessando `localhost:PORT/docs`.
 
+Caso não tenha o Postgres instalado, existem um docker compose do Postgres 16 alpine no projeto, basta rodar o comando `docker compose up` na pasta `/docker` que, se o Docker estiver instalado, realizará a instalação.
+
 ### Usuários padrões
 
 Existem alguns usuários padrões no sistema, são eles:
