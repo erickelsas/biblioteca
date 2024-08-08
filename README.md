@@ -51,3 +51,10 @@ Existem alguns usuários padrões no sistema, são eles:
     isAdmin: false
 }
 ```
+
+### Lógicas de negócio
+
+Existem algumas lógicas de negócios implementadas, são elas:
+- Devolução atrasada causa multa;
+- Usuários com multa em aberto não podem realizar o empréstimo de novos livros;
+- Existem rotas para devolução de empréstimos e pagamento de multas.
