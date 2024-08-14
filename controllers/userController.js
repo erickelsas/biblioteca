@@ -166,7 +166,7 @@ exports.deleteUser = async (req, res) => {
             res.status(400).json({ message: 'Não foi possível deletar usuário.' });
         }
 
-        return res.status(200).json({ message: 'Usuário deletado com sucesso!' });
+        return res.sendStatus(200);
     } catch (err) {
         return res.status(500).json({ message: 'Erro ao deletar usuário.', error: err.message });
     }
@@ -215,7 +215,7 @@ exports.updateUser = async (req, res) => {
             return res.status(404).json({ message: 'Usuário não encontrado.' });
         }
 
-        return res.status(200).json({ message: 'Usuário atualizado com sucesso.', user: updatedUser });
+        return res.status(200).json({ user: updatedUser });
     } catch (error) {
         return res.status(500).json({ message: 'Erro ao atualizar usuário.', error: error.message });
     }

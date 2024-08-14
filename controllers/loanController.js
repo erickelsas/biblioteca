@@ -226,7 +226,7 @@ exports.updateLoan = async (req, res) => {
             return res.status(404).json({ message: 'Empréstimo não encontrado.' });
         }
 
-        return res.status(200).json({ message: 'Empréstimo atualizado com sucesso.', loan: updatedLoan });
+        return res.status(200).json({ loan: updatedLoan });
     } catch (error) {
         return res.status(500).json({ message: 'Erro ao atualizar empréstimo.', error: error.message });
     }
@@ -273,7 +273,7 @@ exports.deleteLoan = async (req, res) => {
             res.status(400).json({ message: 'Não foi possível deletar empréstimo.' });
         }
 
-        return res.status(200).json({ message: 'Empréstimo deletado com sucesso!' })
+        return res.sendStatus(200);
     } catch (err) {
         return res.status(500).json({ message: 'Erro ao deletar empréstimo.', error: err.message })
     }
@@ -315,7 +315,7 @@ exports.returnBook = async (req, res) => {
         }
 
         if(!fine){
-            return res.status(200).json({ message: 'Livro devolvido com sucesso.' })
+            return res.sendStatus(200);
         }
 
         return res.status(200).json({message: 'Livro devolvido com sucesso, mas há uma multa em aberto.', fine})

@@ -212,7 +212,7 @@ exports.updateBook = async (req, res) => {
             return res.status(404).json({ message: 'Livro não encontrado.' });
         }
 
-        return res.status(200).json({ message: 'Livro atualizado com sucesso.', book: updatedBook });
+        return res.status(200).json({ book: updatedBook });
     } catch (error) {
         return res.status(500).json({ message: 'Erro ao atualizar livro.', error: error.message });
     }
@@ -260,7 +260,7 @@ exports.deleteBook = async (req, res) => {
             res.status(400).json({ message: 'Não foi possível inativar livro.' });
         }
 
-        return res.status(200).json({ message: 'Livro inativado com sucesso!' })
+        return res.sendStatus(200);
     } catch (err) {
         return res.status(500).json({ message: 'Erro ao inativar livro.', error: err.message })
     }

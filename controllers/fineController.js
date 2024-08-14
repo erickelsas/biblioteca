@@ -329,7 +329,7 @@ exports.deleteFine = async (req, res) => {
             res.status(400).json({ message: 'Não foi possível deletar multa.' });
         }
     
-        return res.status(200).json({ message: 'Multa deletada com sucesso!' })
+        return res.sendStatus(200);
     } catch (err){
         return res.status(500).json({ message: 'Erro ao deletar multa.', error: err.message})
     }
@@ -367,7 +367,7 @@ exports.updateFine = async (req, res) => {
             return res.status(404).json({ message: 'Multa não encontrada.' });
         }
 
-        return res.status(200).json({ message: 'Multa atualizada com sucesso.', loan: updatedFine });
+        return res.status(200).json({ loan: updatedFine });
     } catch (error) {
         return res.status(500).json({ message: 'Erro ao atualizar multa.', error: error.message });
     }
@@ -420,7 +420,7 @@ exports.payFine = async (req, res) => {
             res.status(400).json({ message: 'Não foi possível paga a multa.' })
         }
 
-        return res.status(200).json({ message: 'Multa paga com sucesso.' })
+        return res.sendStatus(200);
     } catch (err) {
         if(err.message.includes('Multa já foi paga, impossível pagar novamente.')){
             return res.status(400).json({ message: err.message})

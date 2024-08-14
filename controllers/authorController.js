@@ -162,7 +162,7 @@ exports.deleteAuthor = async (req, res) => {
             res.status(400).json({ message: 'Não foi possível deletar autor'});
         }
 
-        return res.status(200).json({ message: 'Autor deletado com sucesso!'})
+        return res.sendStatus(200);
     } catch (err){
         return res.status(500).json({ message: 'Erro ao deletar autor', error: err.message})
     }
@@ -178,7 +178,6 @@ exports.deleteAuthor = async (req, res) => {
     }
     #swagger.responses[200] = {
         description: 'Autor deletado com sucesso',
-        schema: { "message":"autor deletado com sucesso." }
     }
     #swagger.responses[400] = {
         $ref: '#/components/responses/BadRequest'
@@ -199,7 +198,7 @@ exports.updateAuthor = async (req, res) => {
             return res.status(404).json({ message: 'Autor não encontrado' });
         }
 
-        return res.status(200).json({ message: 'Autor atualizado com sucesso', author: updatedAuthor });
+        return res.status(200).json({ author: updatedAuthor });
     } catch (error) {
         return res.status(500).json({ message: 'Erro ao atualizar autor', error: error.message });
     }
