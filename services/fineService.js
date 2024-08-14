@@ -134,7 +134,7 @@ exports.deleteFine = async (id) => {
     }
 }
 
-exports.updateFine = async (id, loan) => {
+exports.updateFine = async (id, fine) => {
     try {
         const [rowsUpdated] = await Fine.update(fine, {
             where: { id }

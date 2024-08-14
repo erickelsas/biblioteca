@@ -361,7 +361,7 @@ exports.updateFine = async (req, res) => {
     const { amount, paid, dueDate, payDate, paymentMethod, loanId, userId } = req.body;
 
     try {
-        const updatedFine = await fineService.updateService(id, { amount, paid, dueDate, payDate, paymentMethod, loanId, userId });
+        const updatedFine = await fineService.updateFine(id, { amount, paid, dueDate, payDate, paymentMethod, loanId, userId });
 
         if (!updatedFine) {
             return res.status(404).json({ message: 'Multa não encontrada.' });
