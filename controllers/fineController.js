@@ -404,17 +404,17 @@ exports.payFine = async (req, res) => {
     try {
         const id = req.params.id;
 
-        const { paymentMethod } = req.body;
-
         if (!id || id < 1) {
             return res.status(400).json({ message: 'Id inválido.' })
         }
+
+        const { paymentMethod } = req.body;
 
         if( !paymentMethod ){
             return res.status(400).json({ message: 'Era esperado um método de pagamento vindo no body.'})
         }
 
-        const success = await fineService.payFine(id, paymentMethod);
+        const success = await fineService.payFine(id, req.user.id, paymentMethod);
 
         if (success < 1) {
             res.status(400).json({ message: 'Não foi possível paga a multa.' })

@@ -221,7 +221,7 @@ const fines = [
         amount: 10,
         dueDate: new Date('2024-08-12T00:00:00Z'),
         loanId: 1,
-        userId: 2
+        userId: 1
     },
     {
         amount: 15,

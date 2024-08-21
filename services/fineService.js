@@ -152,9 +152,13 @@ exports.updateFine = async (id, fine) => {
     }
   };
 
-exports.payFine = async(id, paymentMethod) => {
+exports.payFine = async(id, userId, paymentMethod) => {
     try{
       const fine = await this.getFineById(id);
+
+      if(fine.userId != userId){
+        throw new Error('O usuário logado não é o proprietário da multa.')
+      }
 
       if(fine.paid){
         throw new Error('Multa já foi paga, impossível pagar novamente.')
